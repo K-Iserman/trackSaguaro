@@ -1,0 +1,29 @@
+/* 
+ *
+ * Stylesheet for the Mobile App 
+ *
+ */ 
+
+/* CHECK IN PAGE */ 
+
+#cancel_checkin_btn { 
+
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 10px;
+
+}
+
+#submit_checkin_btn { 
+	width: 100%; 
+	margin: 0 auto; 
+}
+
+.button {
+	border-color: black; 
+} 
+
+.button-light { 
+	border-color: black;
+} 
+ 
