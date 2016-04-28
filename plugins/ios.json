@@ -21,6 +21,10 @@
                         {
                             "xml": "<feature name=\"Geolocation\"><param name=\"ios-package\" value=\"CDVLocation\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"BackgroundFetch\"><param name=\"ios-package\" value=\"CDVBackgroundFetch\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -30,6 +34,12 @@
                     "NSLocationWhenInUseUsageDescription": [
                         {
                             "xml": "<string />",
+                            "count": 1
+                        }
+                    ],
+                    "UIBackgroundModes": [
+                        {
+                            "xml": "<array><string>fetch</string></array>",
                             "count": 1
                         }
                     ]
@@ -42,6 +52,9 @@
             "PACKAGE_NAME": "com.phonegap.helloworld"
         },
         "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "cordova-plugin-background-fetch": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
         }
     },

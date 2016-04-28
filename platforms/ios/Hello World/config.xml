@@ -17,6 +17,10 @@
     <feature name="Geolocation">
         <param name="ios-package" value="CDVLocation" />
     </feature>
+    <feature name="BackgroundFetch">
+        <param name="ios-package" value="CDVBackgroundFetch" />
+        <param name="onload" value="true" />
+    </feature>
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <name>Hello World</name>

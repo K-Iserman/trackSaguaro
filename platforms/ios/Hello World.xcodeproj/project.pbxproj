@@ -42,6 +42,7 @@
 		D971E1AC1CD08D6B00A34341 /* css in Resources */ = {isa = PBXBuildFile; fileRef = D971E1AB1CD08D6B00A34341 /* css */; };
 		5D6501EE59744B8BA49FFB8C /* CDVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D645A521454A0885620279 /* CDVLocation.m */; };
 		6A0EB974E3DE472A8D5B9010 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4624FB0AF5D34F65AB958C42 /* CoreLocation.framework */; };
+		327ED385C1BB49148DC334F4 /* CDVBackgroundFetch.m in Sources */ = {isa = PBXBuildFile; fileRef = C8B82C7E827E4C91BBBBE6AB /* CDVBackgroundFetch.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,8 @@
 		27D645A521454A0885620279 /* CDVLocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVLocation.m"; path = "cordova-plugin-geolocation/CDVLocation.m"; sourceTree = "<group>"; fileEncoding = 4; };
 		273B11D40D7D4375AEC1CB6F /* CDVLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVLocation.h"; path = "cordova-plugin-geolocation/CDVLocation.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		4624FB0AF5D34F65AB958C42 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreLocation.framework"; path = "System/Library/Frameworks/CoreLocation.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		C8B82C7E827E4C91BBBBE6AB /* CDVBackgroundFetch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVBackgroundFetch.m"; path = "cordova-plugin-background-fetch/CDVBackgroundFetch.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		1F7E2FF9A7C646E6985415B1 /* CDVBackgroundFetch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVBackgroundFetch.h"; path = "cordova-plugin-background-fetch/CDVBackgroundFetch.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +215,8 @@
 			children = (
 				27D645A521454A0885620279 /* CDVLocation.m */,
 				273B11D40D7D4375AEC1CB6F /* CDVLocation.h */,
+				C8B82C7E827E4C91BBBBE6AB /* CDVBackgroundFetch.m */,
+				1F7E2FF9A7C646E6985415B1 /* CDVBackgroundFetch.h */,
 			);
 			name = Plugins;
 			path = "Hello World/Plugins";
@@ -403,6 +408,7 @@
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
 				5D6501EE59744B8BA49FFB8C /* CDVLocation.m in Sources */,
+				327ED385C1BB49148DC334F4 /* CDVBackgroundFetch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

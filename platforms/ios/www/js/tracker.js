@@ -5,66 +5,44 @@ watchID = null;
 var coordinates = new Array(); 
 var count = 0; 
 var checkLogin_result = null;
-/* 
- * Function: beginTracking() 
- *
- * Description: begins tracking whenever the page is reloaded. If the page is brought up for the first time, 
- * recent activity is updated through beginTracking.php
- *
- */ 
+var Fetcher = window.BackgroundFetch; 
 
-function beginTracking() { 
-		var request_type = "begin"; 
-		/* update database */ 
-		var url = "http://students.engr.scu.edu/~kiserman/Srdesign/beginTracking.php"; 
-		alert(sessionStorage.getItem("name") + " started tracking"); 
-		var posting = $.post(url, { 
-			type: request_type,  
-			name: sessionStorage.getItem("name"),
-			tracking_id: parseInt(sessionStorage.getItem("id"))
-		}); 
-		posting.done(function(result) { 
-			console.log(result); 
-		}); 	
 
-	run();
-	/* Get position every 10 minutes */ 
-    	var id = setInterval(run, 600000);
+// Error
+function geoError(error){
+	alert("Error in tracker.js, line 88 " + error.message); 
+	console.log(error);
+}
 
-} 
 
-function run() {
-    // Start tracking the User
-    navigator.geolocation.getCurrentPosition(
-     
-        // Success
-        function(position) {
-		tracking_data.push(position);
+function geoSuccess(position) {
+			tracking_data.push(position);
            	$("#currentLat").addClass("hidden");
 	   		$("#currentLon").addClass("hidden");  
-				document.getElementById('currentLat').innerHTML = position.coords.latitude;
-            	document.getElementById('currentLon').innerHTML = position.coords.longitude;
-            	//initMap(position.coords.latitude, position.coords.longitude);
-            	console.log("got position");
-            	localStorage.setItem("Latitude", position.coords.latitude);
-            	localStorage.setItem("Longitude", position.coords.longitude);
-
-            	var myLatLng = {lat: position.coords.latitude, lng: position.coords.longitude};
-
-            	var marker = new google.maps.Marker({
-                	position: myLatLng,
-                	map: map,
-                	title: 'Hello World!'
-            	});
+			document.getElementById('currentLat').innerHTML = position.coords.latitude;
+            document.getElementById('currentLon').innerHTML = position.coords.longitude;
             	
-				coordinates[count] = new Array(); 
-            	coordinates[count] = [position.coords.latitude, position.coords.longitude];
-            	count++;
-            	console.log(coordinates);
+			//initMap(position.coords.latitude, position.coords.longitude);
+            console.log("got position");
+            localStorage.setItem("Latitude", position.coords.latitude);
+            localStorage.setItem("Longitude", position.coords.longitude);
+
+            var myLatLng = {lat: position.coords.latitude, lng: position.coords.longitude};
+            alert("got location");
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+               	title: 'Hello World!'
+            });
             	
-				var geocoder = new google.maps.Geocoder; 
-            	var infowindow = new google.maps.InfoWindow;
-            	geocodeLatLng(geocoder, map, infowindow); 
+			coordinates[count] = new Array(); 
+            coordinates[count] = [position.coords.latitude, position.coords.longitude];
+            count++;
+            console.log(coordinates);
+            	
+			var geocoder = new google.maps.Geocoder; 
+            var infowindow = new google.maps.InfoWindow;
+            geocodeLatLng(geocoder, map, infowindow); 
 
             	$.ajax({
                 	type:'POST',
@@ -80,21 +58,43 @@ function run() {
                 	async:false,
                 	cache:false
             	})
-        },
-         
-        // Error
-        function(error){
-            console.log(error);
-        },
-         
-        // Settings
-        {enableHighAccuracy: true });
-
-        $("#startTracking_start").removeClass("visible").addClass("hidden");
-        $("#endTracking_end").removeClass("hidden").addClass("visible");
-		$("#log_out").addClass("hidden"); 
-        $("#location_data").removeClass("hidden").addClass("visible"); 
+           $("#startTracking_start").removeClass("visible").addClass("hidden");
+        	$("#endTracking_end").removeClass("hidden").addClass("visible");
+			$("#log_out").addClass("hidden"); 
+        	$("#location_data").removeClass("hidden").addClass("visible"); 
 }
+/* 
+ * Function: beginTracking() 
+ *
+ * Description: begins tracking whenever the page is reloaded. If the page is brought up for the first time, 
+ * recent activity is updated through beginTracking.php
+ *
+ */ 
+
+function beginTracking() { 
+		var request_type = "begin"; 
+		
+		sessionStorage.setItem("tracking_status", 1);
+		/* update database */ 
+		var url = "http://students.engr.scu.edu/~kiserman/Srdesign/beginTracking.php"; 
+		//alert(sessionStorage.getItem("name") + " started tracking");
+		var posting = $.post(url, { 
+			type: request_type,  
+			name: sessionStorage.getItem("name"),
+			tracking_id: parseInt(sessionStorage.getItem("id"))
+		}); 
+		posting.done(function(result) { 
+			console.log(result); 
+		}); 	
+
+		run();
+}
+
+function run() {
+   		//start tracking the user 
+    	var watchId = navigator.geolocation.watchPosition(geoSuccess, geoError, {frequency: 30000}); 
+} 
+
 
 /* 
  * Function: sendData() 
@@ -126,6 +126,10 @@ function sendData() {
  */  
 function endTracking() {
 	console.log("Ending tracking: sending session data to server")
+	if(navigator.geolocation) { 
+		navigator.geolocation.clearWatch(this.watchId); 
+		this.watchId = null; 
+	}
 	/* 
 	var url = "http://students.engr.scu.edu/~kiserman/Srdesign/endTracking.php"; 
 	var posting = $.post(url, {
@@ -145,12 +149,12 @@ function endTracking() {
 			name: sessionStorage.getItem("name"),
 		},
 		success: function(data){
-			alert('success ' + data); 
+			//alert('success ' + data);
     		console.log('success: ' + data);
   		},
   		error: function(XMLHttpRequest, textStatus, errorThrown){
-  			alert('error posting to endTracking.php ' + errorThrown);
-    		console.log("Failure to post to endTracking.php with error: " + errorThrown);
+  			//alert('error posting to endTracking.php ' + errorThrown);
+    		alert("Failure to post to endTracking.php with error: " + errorThrown);
   		},	
         async:false,
         cache:false
@@ -189,7 +193,7 @@ function checkLogin(){
 					alert("Invalid Tracking ID. Please try again."); 
 				}
 				else { 
-					alert(data + " is logging in"); 
+					//alert(data + " is logging in");
 					result = data;
 					sessionStorage.setItem("id",id);
 					sessionStorage.setItem("name", data); 
@@ -205,8 +209,9 @@ function checkLogin(){
 	
 		if(result != null) {
 			console.log(sessionStorage.getItem("id"));
-			console.log(sessionStorage.getItem("name")); 
-			return true; 
+			console.log(sessionStorage.getItem("name"));
+            document.getElementById("welcome_msg").innerHTML = "Welcome, " + sessionStorage.getItem("name");
+			return true;
 		} 
 		else {
 			return false;
@@ -235,7 +240,7 @@ function submitCheckIn(){
 	/* Function called when the posting has finished */ 
 	posting.done(function(data) {                                             
 		console.log('Posting check in data was success' + data);
-        returnFromCheckIn();                          
+        	returnFromCheckIn();                          
     }); 
 
     posting.fail(function(xhr, textStatus, errorThrown) { 

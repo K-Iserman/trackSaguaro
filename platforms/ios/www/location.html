@@ -18,11 +18,12 @@
             async defer></script>
         <title>Start Tracking Page</title>
     </head>
-    <body>
+<body>
         <div class="container-fluid location-page"> 
-            <div> 
-                <button class="button button-light visible" id="startTracking_start" onclick="beginTracking()" style="border-color: black;">Start Tracking</button> 
-                <button class="button button-light hidden" id="endTracking_end" onclick="sendData()"End Tracking</button>
+            <div>
+                <h4 id="welcome_msg"> </h4> 
+                <button class="button button-light visible" id="startTracking_start" onclick="beginTracking()">Start Tracking</button> 
+                <button class="button button-light hidden" id="endTracking_end" onclick="sendData()">End Tracking</button>
                 <button class="button button-light" id="log_out" onclick="logOut()"> Log Out </button>
                 <!--hidden check in form, overlays other elements --> 
                 <div class="hidden" id="checkin_form"> 
@@ -81,13 +82,13 @@
         var map;
         function initMap() {
             
-            alert("initializing map");
+            //alert("initializing map");
             navigator.geolocation.getCurrentPosition(onSuccess, onError, { enableHighAccuracy:true });
-            alert("done initializing map");
+            //alert("done initializing map");
         } 
 
         function onSuccess(position) {   // enable ur gps, it takes sometime to call till now wait   
-            alert("success: got location");
+            //alert("success: got location");
                 var lat=position.coords.latitude;
                 var longi=position.coords.longitude;
          
@@ -120,7 +121,7 @@
 
 	   function checkStatus() {
 		  console.log("in check status");  
-          alert("in check status");
+          //alert("in check status");
 		  /* if this user was already tracking, then begin the tracking again */ 
 		  if(parseInt(sessionStorage.getItem("tracking_status")) == 1) { 
 			 //check tracking_status 

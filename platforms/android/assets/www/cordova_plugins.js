@@ -11,6 +11,13 @@ module.exports = [
         "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
         "id": "cordova-plugin-geolocation.PositionError",
         "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-background-fetch/www/BackgroundFetch.js",
+        "id": "cordova-plugin-background-fetch.BackgroundFetch",
+        "clobbers": [
+            "window.BackgroundFetch"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -18,6 +25,7 @@ module.exports.metadata =
 {
     "cordova-plugin-whitelist": "1.2.2",
     "cordova-plugin-geolocation": "2.2.1-dev",
+    "cordova-plugin-background-fetch": "3.0.3",
     "cordova-plugin-compat": "1.0.0"
 }
 // BOTTOM OF METADATA
