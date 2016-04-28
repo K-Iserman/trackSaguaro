@@ -14,15 +14,10 @@ var checkLogin_result = null;
  */ 
 
 function beginTracking() { 
-	if(!sessionStorage.getItem("tracking_status") || sessionStorage.getItem("tracking_status") == 0) { 
 		var request_type = "begin"; 
-		sessionStorage.setItem("tracking_status",1); 
-	}
-	else { 
-		var request_type = "continue"; 
-	}
-	/* update database */ 
+		/* update database */ 
 		var url = "http://students.engr.scu.edu/~kiserman/Srdesign/beginTracking.php"; 
+		alert(sessionStorage.getItem("name") + " started tracking"); 
 		var posting = $.post(url, { 
 			type: request_type,  
 			name: sessionStorage.getItem("name"),
@@ -46,8 +41,8 @@ function run() {
         function(position) {
 		tracking_data.push(position);
            	$("#currentLat").addClass("hidden");
-	   	$("#currentLon").addClass("hidden");  
-		document.getElementById('currentLat').innerHTML = position.coords.latitude;
+	   		$("#currentLon").addClass("hidden");  
+				document.getElementById('currentLat').innerHTML = position.coords.latitude;
             	document.getElementById('currentLon').innerHTML = position.coords.longitude;
             	//initMap(position.coords.latitude, position.coords.longitude);
             	console.log("got position");
@@ -62,12 +57,12 @@ function run() {
                 	title: 'Hello World!'
             	});
             	
-		coordinates[count] = new Array(); 
+				coordinates[count] = new Array(); 
             	coordinates[count] = [position.coords.latitude, position.coords.longitude];
             	count++;
             	console.log(coordinates);
             	
-		var geocoder = new google.maps.Geocoder; 
+				var geocoder = new google.maps.Geocoder; 
             	var infowindow = new google.maps.InfoWindow;
             	geocodeLatLng(geocoder, map, infowindow); 
 
@@ -110,8 +105,7 @@ function run() {
  */ 
 
 function sendData() {
-	console.log("ended tracking");  
-	console.log(localStorage.getItem("Latitude"));
+	console.log("User touched end tracking, in function sendData in tracker.js");  
 	var url = "http://students.engr.scu.edu/~kiserman/Srdesign/locationDataToServer.php"; 
 	var posting = $.post(url, {
 			tracking_id:  parseInt(sessionStorage.getItem("id")), 
@@ -131,14 +125,36 @@ function sendData() {
  * Description: End the tracking and return to the home page 
  */  
 function endTracking() {
+	console.log("Ending tracking: sending session data to server")
+	/* 
 	var url = "http://students.engr.scu.edu/~kiserman/Srdesign/endTracking.php"; 
 	var posting = $.post(url, {
                 name: sessionStorage.getItem("name"),
                 tracking_id: parseInt(sessionStorage.getItem("id"))
         });
         posting.done(function(result) {
+        		alert(result);
                 console.log(result);
         });
+    */ 
+    $.ajax({
+		type:'POST',
+		url: "http://students.engr.scu.edu/~kiserman/Srdesign/endTracking.php", 
+		data:{
+			tracking_id: parseInt(sessionStorage.getItem("id")),
+			name: sessionStorage.getItem("name"),
+		},
+		success: function(data){
+			alert('success ' + data); 
+    		console.log('success: ' + data);
+  		},
+  		error: function(XMLHttpRequest, textStatus, errorThrown){
+  			alert('error posting to endTracking.php ' + errorThrown);
+    		console.log("Failure to post to endTracking.php with error: " + errorThrown);
+  		},	
+        async:false,
+        cache:false
+    });
 	$("#log_out").addClass("visible"); 
 	navigator.geolocation.clearWatch(watchID);
 	sessionStorage.setItem("tracking_status", 0); 
@@ -160,27 +176,20 @@ function checkLogin(){
 		var id = login_form.elements["tracking_id"].value;
 		var result = null;
 		var returnValue = false; 
-		
-		function callback() { 
-			if(result) { 
-				console.log(sessionStorage.getItem("id",id));
-				returnValue = true; 
-			} 
-				
-		} 
 		 
 		$.ajax({
-                    type:'POST',
-                    url:'http://students.engr.scu.edu/~kiserman/Srdesign/checkData.php',
-                    data:{'id_data': $('#trackingID').val()},
-                    crossDoman: true, 
-		    		async:false,
-                    cache:false,
-                    	success:function(data){
+			type:'POST',
+			url:'http://students.engr.scu.edu/~kiserman/Srdesign/checkData.php',
+			data:{'id_data': $('#trackingID').val()},
+			crossDoman: true, 
+			async:false,
+			cache:false,
+			success:function(data){
 				if(!$.trim(data)) { 
 					alert("Invalid Tracking ID. Please try again."); 
 				}
 				else { 
+					alert(data + " is logging in"); 
 					result = data;
 					sessionStorage.setItem("id",id);
 					sessionStorage.setItem("name", data); 
@@ -188,7 +197,7 @@ function checkLogin(){
 			}, 
 			error:function(xhr, textStatus, errorThrown){
                         	alert("Unable to connect to Server. Please try again with a better connection.");
-                        	console.log(xhr.responseText); 
+                        	console.log("Error connecting to server: " + xhr.responseText); 
 							console.log(textStatus); 
 							login_success = false;
             }
@@ -225,12 +234,21 @@ function submitCheckIn(){
 	
 	/* Function called when the posting has finished */ 
 	posting.done(function(data) {                                             
-				console.log('Posting check in data was success' + data);
-                window.location.href = "location.html";                           
+		console.log('Posting check in data was success' + data);
+        returnFromCheckIn();                          
     }); 
 
     posting.fail(function(xhr, textStatus, errorThrown) { 
-    		console.log("Posting check in data failed"); 
-    		console.log(xhr.responseText);
+    	console.log("Posting check in data failed"); 
+    	console.log(xhr.responseText);
     });                                   
 }
+
+function returnFromCheckIn() { 
+	var form = document.getElementById("checkin_form"); 
+    form.className = "hidden"; 
+    document.getElementById("map").className = "visible"; 
+    document.getElementById("check_in_btn").className = "visible"; 
+
+}
+		

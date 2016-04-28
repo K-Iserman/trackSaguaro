@@ -31,7 +31,7 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#E4E4E4;
+    background-color:#FFFFFF;
     background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
     background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
     background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
@@ -57,9 +57,9 @@ body {
     background-size: 61px 101px;
     position:absolute;             /* position in the center of the screen */
     left:50%;
-    top:45%;
+    top:35%;
     height:50px;                   /* text area height */
-    width:225px;                   /* text area width */
+    width:50%;                   /* text area width */
     text-align:center;
     padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
     margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
@@ -86,10 +86,11 @@ h1 {
 }
 
 #title {
+    width: 300px;
+    margin: 0 auto;
     font-size:24px;
     font-weight:normal;
-    margin:0px;
-    overflow:visible;
+    overflow:hidden;
     margin-top: -60px;
     padding-bottom: 15px;
     text-align:center;
@@ -173,8 +174,8 @@ h1 {
 }
 
  #map { 
-    height: 300px; 
-    width: 80%; 
+    height: 16%; 
+    width: 75%; 
     margin: 0 auto; 
 }
 

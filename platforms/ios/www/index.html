@@ -28,23 +28,23 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
-        <link href="http://code.ionicframework.com/1.2.4/css/ionic.min.css" rel="stylesheet"> 
+        <link href="css/ionic.css" rel="stylesheet"> 
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="js/ajax.googleapis.jquery.js"></script>
         <script type="text/javascript" src="js/tracker.js"></script>
 
         <title>Login</title>
     </head>
     <body>
         <div class="app">
-            <h3 class="lead" id="title"> SaguaroTracking </h3> 
+            <h3 class="lead" id="title"> SaguaroTrack </h3> 
 
             <div id="deviceready" class="blink">
                 <p class="event listening">Connecting to Device</p>
                 <p class="event received">Device is Ready</p>
             </div>
 
-            <div id="login" class="mobile_login"> 
+            <div id="login" class="mobile_login col-md-12 col-sm-12"> 
                     <form id="login_form" action="location.html" onsubmit="return checkLogin(this)">
                             <label class = "item item-input">
                             <input id="trackingID" name="tracking_id" type="text" placeholder="Tracking ID"> </input> 
@@ -58,6 +58,8 @@
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
             app.initialize();
+
+
         </script>
     </body>
 </html>
