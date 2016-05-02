@@ -1,3 +1,13 @@
+/** 
+ * File: tracker.js
+ * 
+ * Authors: Christine Rohacz and Kirk Iserman 
+ * 
+ * File Description: This file is the main javascript for SaguroTrack. It performs the following functions: 
+ * - checks the user logging in on index.html 
+ * - handles AJAX communication with the server 
+ */ 
+
 var track_id = '';
 var watch_id = null;
 var tracking_data = []; 
@@ -6,118 +16,63 @@ var coordinates = new Array();
 var count = 0; 
 var checkLogin_result = null;
 var Fetcher = window.BackgroundFetch; 
+var bgLocationServices; 
 
 
-// Error
-function geoError(error){
-	alert("Error in tracker.js, line 88 " + error.message); 
-	console.log(error);
-}
-
-
-function geoSuccess(position) {
-			tracking_data.push(position);
-           	$("#currentLat").addClass("hidden");
-	   		$("#currentLon").addClass("hidden");  
-			document.getElementById('currentLat').innerHTML = position.coords.latitude;
-            document.getElementById('currentLon').innerHTML = position.coords.longitude;
-            	
-			//initMap(position.coords.latitude, position.coords.longitude);
-            console.log("got position");
-            localStorage.setItem("Latitude", position.coords.latitude);
-            localStorage.setItem("Longitude", position.coords.longitude);
-
-            var myLatLng = {lat: position.coords.latitude, lng: position.coords.longitude};
-            alert("got location");
-            var marker = new google.maps.Marker({
-                position: myLatLng,
-                map: map,
-               	title: 'Hello World!'
-            });
-            	
-			coordinates[count] = new Array(); 
-            coordinates[count] = [position.coords.latitude, position.coords.longitude];
-            count++;
-            console.log(coordinates);
-            	
-			var geocoder = new google.maps.Geocoder; 
-            var infowindow = new google.maps.InfoWindow;
-            geocodeLatLng(geocoder, map, infowindow); 
-
-            	$.ajax({
-                	type:'POST',
-                	url:"http://students.engr.scu.edu/~kiserman/Srdesign/mobileDataToServer.php",
-                	data:{
-                    		tracking_id: parseInt(sessionStorage.getItem("id")),
-                    		name: sessionStorage.getItem("name"),
-                    		lati: position.coords.latitude,
-                    		longi: position.coords.longitude,
-                    		address: localStorage.getItem("currentAddress")
-
-                	},
-                	async:false,
-                	cache:false
-            	})
-           $("#startTracking_start").removeClass("visible").addClass("hidden");
-        	$("#endTracking_end").removeClass("hidden").addClass("visible");
-			$("#log_out").addClass("hidden"); 
-        	$("#location_data").removeClass("hidden").addClass("visible"); 
-}
 /* 
  * Function: beginTracking() 
  *
- * Description: begins tracking whenever the page is reloaded. If the page is brought up for the first time, 
- * recent activity is updated through beginTracking.php
+ * Description: Sends update to the server whenever a user begins tracking
  *
  */ 
 
 function beginTracking() { 
-		var request_type = "begin"; 
-		
-		sessionStorage.setItem("tracking_status", 1);
+		console.log("beginning tracking");
 		/* update database */ 
-		var url = "http://students.engr.scu.edu/~kiserman/Srdesign/beginTracking.php"; 
-		//alert(sessionStorage.getItem("name") + " started tracking");
-		var posting = $.post(url, { 
-			type: request_type,  
-			name: sessionStorage.getItem("name"),
-			tracking_id: parseInt(sessionStorage.getItem("id"))
-		}); 
-		posting.done(function(result) { 
-			console.log(result); 
-		}); 	
+		$.ajax({
+        	type:'POST',
+         	url:"http://students.engr.scu.edu/~kiserman/Srdesign/beginTracking.php",
+        	data:{
+				name: sessionStorage.getItem("name"),
+				tracking_id: parseInt(sessionStorage.getItem("id")),
+				lati: localStorage.getItem("Latitude"), 
+				longi: localStorage.getItem("Longitude"), 
+				address: localStorage.getItem("currentAddress")
+			},
+			async:false,
+            cache:false
 
-		run();
+		});	
 }
-
-function run() {
-   		//start tracking the user 
-    	var watchId = navigator.geolocation.watchPosition(geoSuccess, geoError, {frequency: 30000}); 
-} 
-
 
 /* 
  * Function: sendData() 
  * 
- * Precondition: This function is called when the user decides to end tracking. 
- * Postcondition: the user's data is sent to the server and then endTracking is called. 
- * Description: send the most recent location data and info the the database before exiting the application
+ * Precondition: This function is called when location data needs to be sent to the server.
+ * 
+ * Postcondition: The user's data is sent to the server whenever location updates are recieved 
+ * or when the user starts and ends tracking for the first time. 
+ *  
+ * Description: Send the most recent location data stored in local storage before exiting the application
  */ 
 
 function sendData() {
-	console.log("User touched end tracking, in function sendData in tracker.js");  
-	var url = "http://students.engr.scu.edu/~kiserman/Srdesign/locationDataToServer.php"; 
-	var posting = $.post(url, {
+	console.log("In function sendData in tracker.js");  
+	//var url = "http://students.engr.scu.edu/~kiserman/Srdesign/locationDataToServer.php"; 
+	$.ajax({
+    	type:'POST',
+        url:"http://students.engr.scu.edu/~kiserman/Srdesign/locationDataToServer.php",
+        data:{
 			tracking_id:  parseInt(sessionStorage.getItem("id")), 
 			name: sessionStorage.getItem("name"), 
 			lati: localStorage.getItem("Latitude"), 
 			longi: localStorage.getItem("Longitude"), 
-			address: localStorage.getItem("currentAddress")
-		});
-		posting.done(function(data) { 
-			console.log('success' + data); 
-		});   
-	endTracking();  		
+			address: localStorage.getItem("currentAddress"),
+			timestamp: localStorage.getItem("timestamp")
+		},
+        async:false,
+        cache:false
+    });
 }
 /* 
  * Function: endTracking() 
@@ -126,21 +81,6 @@ function sendData() {
  */  
 function endTracking() {
 	console.log("Ending tracking: sending session data to server")
-	if(navigator.geolocation) { 
-		navigator.geolocation.clearWatch(this.watchId); 
-		this.watchId = null; 
-	}
-	/* 
-	var url = "http://students.engr.scu.edu/~kiserman/Srdesign/endTracking.php"; 
-	var posting = $.post(url, {
-                name: sessionStorage.getItem("name"),
-                tracking_id: parseInt(sessionStorage.getItem("id"))
-        });
-        posting.done(function(result) {
-        		alert(result);
-                console.log(result);
-        });
-    */ 
     $.ajax({
 		type:'POST',
 		url: "http://students.engr.scu.edu/~kiserman/Srdesign/endTracking.php", 
@@ -159,9 +99,6 @@ function endTracking() {
         async:false,
         cache:false
     });
-	$("#log_out").addClass("visible"); 
-	navigator.geolocation.clearWatch(watchID);
-	sessionStorage.setItem("tracking_status", 0); 
 	
 	window.location = "location.html";
 
@@ -210,7 +147,7 @@ function checkLogin(){
 		if(result != null) {
 			console.log(sessionStorage.getItem("id"));
 			console.log(sessionStorage.getItem("name"));
-            document.getElementById("welcome_msg").innerHTML = "Welcome, " + sessionStorage.getItem("name");
+            document.getElementById("welcome_msg").text = "Welcome, " + sessionStorage.getItem("name");
 			return true;
 		} 
 		else {
@@ -219,15 +156,19 @@ function checkLogin(){
 	
 }
 
-function checkInBack(){
-    window.location = "location.html";
-}
-
+/** 
+ * Function: submitCheckIn() 
+ * 
+ * Description: Submits the check in form on location.htm to the server 
+ */ 
 
 function submitCheckIn(){
 	console.log("submitting check in data"); 
-	var url = "http://students.engr.scu.edu/~kiserman/Srdesign/checkInData.php"; 
-	var posting = $.post(url, {
+	//var url = 'http://students.engr.scu.edu/~kiserman/Srdesign/checkInData.php',
+	$.ajax({
+    	type:'POST',
+        url:"http://students.engr.scu.edu/~kiserman/Srdesign/checkInData.php",
+        data:{
         	tracking_id: parseInt(sessionStorage.getItem("id")), 
 			name: sessionStorage.getItem("name"), 
 			client: $('#client').val(), 
@@ -235,25 +176,19 @@ function submitCheckIn(){
             start_time: $('#timestarted').val(),                              
             end_time: $('#timeended').val(),                                  
             feedback: $('#feedback').val()                                    
-    });                                                                       
-	
-	/* Function called when the posting has finished */ 
-	posting.done(function(data) {                                             
-		console.log('Posting check in data was success' + data);
-        	returnFromCheckIn();                          
-    }); 
+    	},
+        async:false,
+        cache:false,
+        success:function(data){
+			console.log('Posting check in data was success' + data);
+        	returnFromCheckIn();  
+        },
+        error:function(xhr, textStatus, errorThrown){
+        	alert("Failed: Please try again with a better network connection");
+    		console.log("Posting check in data failed"); 
+    		console.log(xhr.responseText);
+        } 
 
-    posting.fail(function(xhr, textStatus, errorThrown) { 
-    	console.log("Posting check in data failed"); 
-    	console.log(xhr.responseText);
-    });                                   
+
+    });                                                                                                
 }
-
-function returnFromCheckIn() { 
-	var form = document.getElementById("checkin_form"); 
-    form.className = "hidden"; 
-    document.getElementById("map").className = "visible"; 
-    document.getElementById("check_in_btn").className = "visible button button-positive"; 
-
-}
-		
