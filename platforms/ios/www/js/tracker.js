@@ -163,12 +163,8 @@ function checkLogin(){
  */ 
 
 function submitCheckIn(){
-	console.log("submitting check in data"); 
-	//var url = 'http://students.engr.scu.edu/~kiserman/Srdesign/checkInData.php',
-	$.ajax({
-    	type:'POST',
-        url:"http://students.engr.scu.edu/~kiserman/Srdesign/checkInData.php",
-        data:{
+        var url = "http://students.engr.scu.edu/~kiserman/Srdesign/checkInData.php";
+        var posting = $.post(url, {
         	tracking_id: parseInt(sessionStorage.getItem("id")), 
 			name: sessionStorage.getItem("name"), 
 			client: $('#client').val(), 
@@ -176,19 +172,9 @@ function submitCheckIn(){
             start_time: $('#timestarted').val(),                              
             end_time: $('#timeended').val(),                                  
             feedback: $('#feedback').val()                                    
-    	},
-        async:false,
-        cache:false,
-        success:function(data){
-			console.log('Posting check in data was success' + data);
-        	returnFromCheckIn();  
-        },
-        error:function(xhr, textStatus, errorThrown){
-        	alert("Failed: Please try again with a better network connection");
-    		console.log("Posting check in data failed"); 
-    		console.log(xhr.responseText);
-        } 
-
-
-    });                                                                                                
+       	});                                                                       
+		posting.done(function(data) {                                             
+                console.log('success' + data);
+                window.location.href = "location.html";                           
+        });                                     
 }

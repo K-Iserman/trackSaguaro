@@ -163,6 +163,7 @@ $("#feedback_form").submit(function(event) {
 }); 
 
 
+
 /** 
  * Funcion: returnFromCheckIn() 
  * 

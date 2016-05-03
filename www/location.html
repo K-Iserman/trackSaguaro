@@ -37,7 +37,7 @@
                 </div>
                 <!--hidden check in form, overlays other elements --> 
                 <div class="hidden" id="checkin_form"> 
-                <form  action="http://students.engr.scudc.scu.edu/~kiserman/Srdesign/checkInData.php" title="" role="form" id="feedback_form" method="POST">
+                <form role="form" id="feedback_form" method="POST">
                 <div class="list">
                     <span class="input-label">Client </span> 
                     <label class="item item-input">
@@ -61,7 +61,7 @@
                     </label>
                     <span></span> 
                     <div id="check-in-btns"> 
-                        <button type="submit" class ="button button-positive" id="submit_checkin_btn">SUBMIT</button>
+                        <button type="submit" class ="button button-positive" id="submit_checkin_btn" onclick="submitCheckIn();">SUBMIT</button>
                         <button type="button" class="button button-stable" id="cancel_checkin_btn" onclick="returnFromCheckIn();">CANCEL</button>
                     </div>
                 </div>
