@@ -7,34 +7,23 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"/>
         <link rel="stylesheet" type="text/css" href="css/index.css" />
-	    <link rel="stylesheet" href="css/ionic.css">
+        <link rel="stylesheet" type="text/css" href="css/styles.css" /> 
+	    <link href="css/ionic.css" rel="stylesheet">
 	    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="css/styles.css" /> 
-
         <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
         <script src="js/ajax.googleapis.jquery.js"></script>
+        <script type="text/javascript" src="js/tracker.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRI3hS-2SymscTu9rkQrERIKwc9MhuTGU&signed_in=true&callback=initMap"
             async defer></script>
-        <script type="text/javascript" src="js/location.js"></script>  <!--javascript file for this html file --> 
         <title>Start Tracking Page</title>
     </head>
-<body>
+    <body>
         <div class="container-fluid location-page"> 
-            <div>
-                <p id="welcome_msg"> </p> 
-                <button class="button button-light visible" id="startTracking_start" onclick="startBackgroundGeolocation()">Start Tracking</button> 
-                <button class="button button-light hidden" id="endTracking_end" onclick="stopBackgroundGeolocation()">End Tracking</button>
+            <div> 
+                <button class="button button-light visible" id="startTracking_start" onclick="beginTracking()" style="border-color: black;">Start Tracking</button> 
+                <button class="button button-light hidden" id="endTracking_end" onclick="sendData()"End Tracking</button>
                 <button class="button button-light" id="log_out" onclick="logOut()"> Log Out </button>
-                <div id = "location_data" class="hidden">
-                    <div class="card">
-                        <div class="item item-text-wrap">
-                            <h2 id="current_location">Status:</h2><p><span id="currentGeoLocation"></span></p>
-                            <p><span class="hidden" id="currentLat"></span><span class="hidden" id="currentLon"></span></p>
-                            <h4 id="tracking_status"></h4>
-                        </div>
-                    </div>
-                </div>
                 <!--hidden check in form, overlays other elements --> 
                 <div class="hidden" id="checkin_form"> 
                 <form  action="http://students.engr.scudc.scu.edu/~kiserman/Srdesign/checkInData.php" title="" role="form" id="feedback_form" method="POST">
@@ -66,14 +55,14 @@
                     </div>
                 </div>
                 </form>
-                </div>
-                <!--end hidden checkin form--> 
+                </div><!--end hidden checkin form--> 
                 <h3 id="startTracking_status"></h3>
                     <div id = "location_data" class="hidden">
                         <div class="card">
                             <div class="item item-text-wrap">
-                                <h2 id="current_location">Status:</h2><p><span id="current_status">Inactive</span></p>
-                                <p><span id="currentLat"></span><span id="currentLon"></span></p>
+                                <h2 id="current_location">Current Location:</h2><p><span id="currentGeoLocation"></span></p>
+                                <p><span class="hidden" id="currentLat"></span><span class="hidden" id="currentLon"></span></p>
+                                <h2>Current Time: <p><span id="currentTime"> </span></p></h2>
                             </div>
                         </div>
                     </div>
@@ -87,16 +76,73 @@
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="js/tracker.js"></script> 
         <script type="text/javascript">
+        var infoWindow;
+        var map;
+        function initMap() {
+            
+            alert("initializing map");
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, { enableHighAccuracy:true });
+            alert("done initializing map");
+        } 
 
-        document.getElementById('welcome_msg').innerHTML = "Welcome, " + sessionStorage.getItem("name");
-        /**  
-         * Function: geocodeLatLng() 
-         * 
-         * Description: Geocode lat and lng coordinates into an address and stores that information 
-         * in a local storage item called currentAddress 
-         */ 
+        function onSuccess(position) {   // enable ur gps, it takes sometime to call till now wait   
+            alert("success: got location");
+                var lat=position.coords.latitude;
+                var longi=position.coords.longitude;
+         
+                 mapCenter = new google.maps.LatLng(lat, longi),
+                 myOptions = {
+                     zoom:10,
+                     mapTypeId: google.maps.MapTypeId.ROADMAP,
+                     center: mapCenter,
+                 },
+                map = new google.maps.Map(document.getElementById("map"), myOptions),
+                  
+                 marker = new google.maps.Marker({
+                     position: new google.maps.LatLng(lat, longi),
+                     map: map,
+                     title:"Current Location!"
+                })
+        }
+
+        function onError(error){
+                alert("Getting the error"+ error.code + "\nerror mesg :" +error.message);
+        }
+
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                        'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+        }
+
+	   function checkStatus() {
+		  console.log("in check status");  
+          alert("in check status");
+		  /* if this user was already tracking, then begin the tracking again */ 
+		  if(parseInt(sessionStorage.getItem("tracking_status")) == 1) { 
+			 //check tracking_status 
+		  } 
+		  return; 
+	   } 
+		
+	   function logOut() {
+		  console.log("in logout function"); 
+		  sessionStorage.clear(); 
+		  window.location = "index.html"; 
+	   } 
+            
+	   function loadCheckIn() {
+            document.getElementById("map").className = "hidden"; 
+            document.getElementById("check_in_btn").className = "hidden"; 
+            var form = document.getElementById("checkin_form"); 
+            form.className = "visible"; 
+
+            //window.location = "checkIn.html";
+        }
+
 	   function geocodeLatLng(geocoder, map, infowindow) { 
                 var latitude = document.getElementById('currentLat').innerHTML; 
                 var longitude = document.getElementById('currentLon').innerHTML; 
@@ -123,6 +169,12 @@
                     }
                 });    
 	   }
+       $("#feedback_form").submit(function(event) { 
+            //stop from handling the form normally 
+            event.preventDefault(); 
+            //now get some values from elements on the page
+            submitCheckIn(); 
+        }); 
         </script>
    </body>
 </html>

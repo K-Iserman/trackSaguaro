@@ -4,16 +4,6 @@
  *
  */ 
 
-@import url(https://fonts.googleapis.com/css?family=EB+Garamond);
-
-/* GENERAL CSS */ 
-
-p { 
-	font-family:'EB Garamond', serif;
-	font-size: 20px; 
-	text-transform: none;
-}
-
 /* CHECK IN PAGE */ 
 
 #cancel_checkin_btn { 
@@ -28,3 +18,12 @@ p {
 	width: 100%; 
 	margin: 0 auto; 
 }
+
+.button {
+	border-color: black; 
+} 
+
+.button-light { 
+	border-color: black;
+} 
+ 

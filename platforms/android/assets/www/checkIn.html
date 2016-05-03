@@ -8,39 +8,30 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"/>
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <link rel="stylesheet" type="text/css" href="css/styles.css" /> 
-	    <link href="css/ionic.css" rel="stylesheet">
+	    <link href="http://code.ionicframework.com/1.2.4/css/ionic.min.css" rel="stylesheet">
 	    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-        <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
-        <script src="js/ajax.googleapis.jquery.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type="text/javascript" src="js/tracker.js"></script>
         <title>Check In</title>
     </head>
-    <style> 
- 	body { 
-		height: 110%; 
-	} 
-    </style>  
+    
     <body>
         <div class="container-fluid checkin-page hidden"> 
             <form  action="http://students.engr.scudc.scu.edu/~kiserman/Srdesign/checkInData.php" title="" role="form" id="feedback_form" method="POST">
-                <div class="list checkin_div col-md-12 col-sm-12">
-                
-                    <span class="input-label"> Client Name</span> 
+                <div class="list">
+                    <span class="input-label">Client </span> 
                     <label class="item item-input">
                         <input type="text" class="item item-input" id="client" name="client" placeholder="i.e Apartment Complex" required></input>
                     </label>	
-                    
-                    <span class="input-label"> Work Order # </span> 
-		    <label class="item item-input">
+                    <span class="input-label">Work Order #</span> 
+                    <label class="item item-input"> 
                         <input type="text" class="item item-input" id="workorder" name="workorder" placeholder="i.e 478-9012-281"></input> 
                 	</label>
-                    
-                    <span class="input-label"> Time Started</span> 
-		    <label class="item item-input">
+                    <span class="input-label"> Time Started </span> 
+                    <label class="item item-input">
                         <input type='time' class="item item-input" name="timestarted" id="timestarted" step="1" />
                     </label>
-			
                     <span class="input-label"> Time Ended</span> 
                     <label class="item item-input">
                         <input type='time' name="timeended" id="timeended" step="1" />
