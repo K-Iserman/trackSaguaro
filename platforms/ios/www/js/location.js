@@ -19,7 +19,7 @@ var bgLocationServices;
 
 /* initMap is the callback for loading google maps API javascript src */ 
 function initMap() {
-	console.log("getting current location"); 
+	console.log("initializing map"); 
 	/* call getCurrentPosition at least once so user allows location to be tracked */ 
 	navigator.geolocation.getCurrentPosition(showPosition, showError, {enableHighAccuracy:true}); 
 } 
@@ -37,16 +37,22 @@ function showPosition(position) {   // enable ur gps, it takes sometime to call 
 
 	mapCenter = new google.maps.LatLng(lat, longi); 
 
+	/*
 	myOptions = {
 		zoom:10,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		center: mapCenter,
-	},
-                
+	};
+     */          
 	console.log("Got position and initializing map"); 
 	/* initialize maps */ 
-	map = new google.maps.Map(document.getElementById("map"), myOptions),
-                  
+	//map = new google.maps.Map(document.getElementById("map"), myOptions),
+    map = new google.maps.Map(document.getElementById("map"), {
+		zoom:10,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		center: mapCenter
+	});
+             
 	marker = new google.maps.Marker({
 		position: new google.maps.LatLng(lat, longi),
    		map: map,
@@ -62,6 +68,10 @@ function showError(error){
 
 
 function startBackgroundGeolocation() { 
+
+
+	navigator.geolocation.getCurrentPosition(showPosition, showError, {enableHighAccuracy:true}); 
+
 	console.log("starting background geolocation tracking");
 	alert("starting background geolocation");
 	document.getElementById('tracking_status').innerHTML = "Active"; 
@@ -90,8 +100,8 @@ function startBackgroundGeolocation() {
     /* every time we get a new location, update the local storage and hidden elements */ 
 	bgLocationServices.registerForLocationUpdates(function(location) { 
 		console.log("We got a BG update" + JSON.stringify(location)); 
-		document.getElementById('currentLat').innerHTML = location[2]; 
-		document.getElementById('currentLon').innerHTML = location[1]; 
+		document.getElementById('currentLat').innerHTML = location.latitude; 
+		document.getElementById('currentLon').innerHTML = location.longitude; 
 		console.log(location.latitude + ", " + location.longitude);
 		localStorage.setItem("Latitude", location.latitude);
 		localStorage.setItem("Longitude", location.longitude);
