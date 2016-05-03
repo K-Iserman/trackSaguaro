@@ -22,9 +22,10 @@
 
 
 html, body {
-    height: 100%;
-    margin: 0;
+    height: auto;
+	margin: 0;
     padding: 0;
+overflow: visible;
 }
 
 body {
@@ -42,6 +43,7 @@ body {
         color-stop(0, #A7A7A7),
         color-stop(0.51, #E4E4E4)
     );
+	overflow: visible;
     background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
@@ -54,11 +56,12 @@ body {
 /* Portrait layout (default) */
 .app {
     background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
-    background-size: 61px 101px;
+    background-size: 100px 180px;
     position:absolute;             /* position in the center of the screen */
     top:35%;
+    left: 38%;
     height:50px;                   /* text area height */
-    width:50%;                   /* text area width */
+    width:80%;                   /* text area width */
     text-align:center;
     padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
     margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
@@ -75,24 +78,14 @@ body {
     }
 }
 
-h1 {
-    font-size:24px;
-    font-weight:normal;
-    margin:0px;
-    overflow:visible;
-    padding:0px;
-    text-align:center;
-}
-
 #title {
-    width: 300px;
-    margin: 0 auto;
-    font-size:24px;
-    font-weight:normal;
-    overflow:hidden;
-    margin-top: -60px;
-    padding-bottom: 100px;
-    text-align:center;
+    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+	font-size: 24px;
+    font-style: normal;
+	margin: 0px 30px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+	padding 15px 0px;
 }
 
 .event {
@@ -136,7 +129,7 @@ h1 {
 }
 
 #login{ 
-    padding:10px;
+    padding:5px;
 }
 
 #login input[type="text"] { 
@@ -173,7 +166,7 @@ h1 {
 }
 
  #map { 
-    height: 16%; 
+    height: 400px; 
     width: 75%; 
     margin: 0 auto; 
 }
@@ -199,4 +192,13 @@ h1 {
 
 .button.button-light { 
     border-color: black;
-}  
+}
+
+.checkin_div span{
+    width: 200px;
+}
+
+.input-label { 
+	width: 50%; 
+	text-align:left; 
+} 
