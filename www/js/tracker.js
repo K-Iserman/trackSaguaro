@@ -28,6 +28,8 @@ var bgLocationServices;
 
 function beginTracking() { 
 		console.log("beginning tracking");
+		console.log(localStorage.getItem("currentAddress")); 
+
 		/* update database */ 
 		$.ajax({
         	type:'POST',
@@ -43,6 +45,7 @@ function beginTracking() {
             cache:false
 
 		});	
+
 }
 
 /* 
@@ -58,7 +61,19 @@ function beginTracking() {
 
 function sendData() {
 	console.log("In function sendData in tracker.js");  
-	//var url = "http://students.engr.scu.edu/~kiserman/Srdesign/locationDataToServer.php"; 
+
+	if(localStorage.getItem("Latitude") != localStorage.getItem("LastLatitude") && 
+		localStorage.getItem("Longitude") != localStorage.getItem("LastLongitude")) { 
+			/* update current location */ 
+			console.log("we need to update current location") 
+			var type ="update"; 
+	} 
+	else { 
+		console.log("current location remains the same"); 
+		var type = "same"; 
+	}
+
+
 	$.ajax({
     	type:'POST',
         url:"http://students.engr.scu.edu/~kiserman/Srdesign/locationDataToServer.php",
@@ -68,11 +83,14 @@ function sendData() {
 			lati: localStorage.getItem("Latitude"), 
 			longi: localStorage.getItem("Longitude"), 
 			address: localStorage.getItem("currentAddress"),
-			timestamp: localStorage.getItem("timestamp")
+			timestamp: localStorage.getItem("timestamp"),
+			request_type: type
 		},
         async:false,
         cache:false
     });
+
+
 }
 /* 
  * Function: endTracking() 
@@ -100,6 +118,7 @@ function endTracking() {
         cache:false
     });
 	
+	localStorage.clear();
 	window.location = "location.html";
 
 }
@@ -116,13 +135,12 @@ function checkLogin(){
 		console.log("Checking the login id"); 
 		var id = login_form.elements["tracking_id"].value;
 		var result = null;
-		var returnValue = false; 
 		 
 		$.ajax({
 			type:'POST',
 			url:'http://students.engr.scu.edu/~kiserman/Srdesign/checkData.php',
 			data:{'id_data': $('#trackingID').val()},
-			crossDoman: true, 
+			crossDomain: true, 
 			async:false,
 			cache:false,
 			success:function(data){
@@ -188,5 +206,7 @@ function submitCheckIn(){
             	console.log("Posting failed due to the following error " + errorThrown); 
 
             }                                
-       	});                                                                                               
+       	});  
+
+       	returnFromCheckIn();                                                                                             
 }

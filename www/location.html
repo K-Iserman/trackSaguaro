@@ -61,7 +61,7 @@
                     </label>
                     <span></span> 
                     <div id="check-in-btns"> 
-                        <button type="submit" class ="button button-positive" id="submit_checkin_btn" onclick="submitCheckIn();">SUBMIT</button>
+                        <button type="button" class ="button button-positive" id="submit_checkin_btn" onclick="submitCheckIn();">SUBMIT</button>
                         <button type="button" class="button button-stable" id="cancel_checkin_btn" onclick="returnFromCheckIn();">CANCEL</button>
                     </div>
                 </div>
@@ -98,6 +98,7 @@
          * in a local storage item called currentAddress 
          */ 
 	   function geocodeLatLng(geocoder, map, infowindow) { 
+        console.log("in geocodeLatLng");
                 var latitude = document.getElementById('currentLat').innerHTML; 
                 var longitude = document.getElementById('currentLon').innerHTML; 
 		        var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
@@ -111,8 +112,10 @@
                             map: map
                         });
                         console.log(results[1].formatted_address);
+                        //alert(results[1].formatted_address);
                         document.getElementById('currentGeoLocation').innerHTML = results[1].formatted_address;
                         localStorage.setItem('currentAddress', results[1].formatted_address); 
+                        console.log("setting local storage" + localStorage.getItem('currentAddress'));
 			             //infowindow.setContent(results[1].formatted_address);
                         //infowindow.open(map, marker);
                         } else {
